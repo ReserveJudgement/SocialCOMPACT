@@ -1,0 +1,84 @@
+import argparse
+import os
+
+import uvicorn
+
+from a2a.server.apps import A2AStarletteApplication
+from a2a.server.request_handlers import DefaultRequestHandler
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import (
+    AgentCapabilities,
+    AgentCard,
+    AgentSkill,
+)
+
+from agent_executor import Executor
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run the A2A agent.")
+    parser.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind the server")
+    parser.add_argument("--port", type=int, default=9018, help="Port to bind the server")
+    parser.add_argument("--card-url", type=str, help="URL to advertise in the agent card")
+    parser.add_argument(
+        "--platform", type=str, default=os.getenv("PLATFORM", "OLLAMA"),
+        help="LLM platform name (one of: OPENAI, GOOGLE, OPENROUTER, OLLAMA or LMSTUDIO)")
+    parser.add_argument(
+        "--model", type=str, default=os.getenv("MODEL", "gpt-oss:20b"),
+        help="Model identifier to use for the LLM")
+    parser.add_argument(
+        "--apikey", type=str, default="OPENAI_API_KEY",
+        help="Name of the environment variable containing API key for the LLM platform")
+    args = parser.parse_args()
+
+    # Fill in your agent card
+    # See: https://a2a-protocol.org/latest/tutorials/python/3-agent-skills-and-card/
+
+    com = AgentSkill(
+        id="Communicate",
+        name="Communicate",
+        description="Chat with other agents",
+        tags=[],
+        examples=[]
+    )
+
+    pred = AgentSkill(
+        id="Predict",
+        name="Predict",
+        description="Predict other agents' actions",
+        tags=[],
+        examples=[]
+    )
+
+    act = AgentSkill(
+        id="Act",
+        name="Act",
+        description="Make decisions in the given format",
+        tags=[],
+        examples=[]
+    )
+
+    agent_card = AgentCard(
+        name="Social COMPACT Agent",
+        description="Social COMPACT Agent",
+        url=args.card_url or f"http://{args.host}:{args.port}/",
+        version='1.0.0',
+        default_input_modes=['text'],
+        default_output_modes=['text'],
+        capabilities=AgentCapabilities(streaming=True),
+        skills=[com, pred, act]
+    )
+
+    request_handler = DefaultRequestHandler(
+        agent_executor=Executor(platform=args.platform, model=args.model, api_key=args.apikey),
+        task_store=InMemoryTaskStore(),
+    )
+    server = A2AStarletteApplication(
+        agent_card=agent_card,
+        http_handler=request_handler,
+    )
+    uvicorn.run(server.build(), host=args.host, port=args.port)
+
+
+if __name__ == '__main__':
+    main()
