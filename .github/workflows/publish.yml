@@ -18,8 +18,10 @@ jobs:
           # Update this to build your own agent images.
           - name: social-compact-agent
             dockerfile: agentbeats/Agent/Dockerfile
+            context: agentbeats/Agent
           - name: social-compact-arena
             dockerfile: agentbeats/Arena/Dockerfile
+            context: agentbeats/Arena
 
     # These permissions are required for the workflow to:
     # - Read repository contents (checkout code)
@@ -61,7 +63,7 @@ jobs:
         id: build
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ${{ matrix.context }}  
           file: ${{ matrix.dockerfile }}
           # Only push if this is a push event (not a PR)
           # PRs will build but not push to avoid polluting the registry
