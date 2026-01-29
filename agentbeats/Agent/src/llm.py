@@ -25,7 +25,12 @@ class Model:
             if api_key is None:
                 print("Error: Google model needs an API key")
                 exit()
-
+            if self.rpm is None:
+                self.rpm = 15
+            if self.rpd is None:
+                self.rpd = 1000
+            if self.tpm is None:
+                self.tpm = 250000
             self.llm = genai.Client(api_key=api_key)
 
         elif self.provider == "OPENAI":
@@ -38,6 +43,10 @@ class Model:
                 headers={'x-some-header': 'some-value'})
 
         elif self.provider == "OPENROUTER":
+            if self.rpm is None:
+                self.rpm = 20
+            if self.rpd is None:
+                self.rpd = 1000
             self.llm = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
     def __call__(self, prompt):
@@ -48,7 +57,7 @@ class Model:
                     time.sleep((60 / self.rpm) + 0.2)
                 self.num_requests += 1
                 now = time.time()
-                expected_token_use = self.model.models.count_tokens(model=self.model, contents=messages).total_tokens
+                expected_token_use = self.llm.models.count_tokens(model=self.model, contents=messages).total_tokens
                 self.tokens_used += expected_token_use
                 if (self.rpm is not None) and (self.num_requests >= self.rpm) and (now - self.last_time <= 60):
                     time.sleep(60 - (now - self.last_time))
@@ -144,6 +153,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
