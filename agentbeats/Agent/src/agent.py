@@ -19,9 +19,7 @@ class Agent:
         if model is None:
             model = os.getenv("MODEL")
         print("initialized ", platform, model)
-        if api_key is not None:
-            api_key = os.getenv(api_key)
-        else:
+        if api_key is None:
             api_key = os.getenv(f"{platform}_API_KEY")
         self.model = Model(platform, model, api_key)
         self.name = ""
