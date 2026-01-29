@@ -20,13 +20,6 @@ def main():
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind the server")
     parser.add_argument("--port", type=int, default=9018, help="Port to bind the server")
     parser.add_argument("--card-url", type=str, help="URL to advertise in the agent card")
-    parser.add_argument(
-        "--platform", type=str, default=os.getenv("PLATFORM"),
-        help="LLM platform name (one of: OPENAI, GOOGLE, OPENROUTER, OLLAMA)")
-    parser.add_argument(
-        "--model", type=str, default=os.getenv("MODEL"),
-        help="Model identifier to use for the LLM")
-    args = parser.parse_args()
 
     # Fill in your agent card
     # See: https://a2a-protocol.org/latest/tutorials/python/3-agent-skills-and-card/
@@ -67,7 +60,7 @@ def main():
     )
 
     request_handler = DefaultRequestHandler(
-        agent_executor=Executor(platform=args.platform, model=args.model),
+        agent_executor=Executor(),
         task_store=InMemoryTaskStore(),
     )
     server = A2AStarletteApplication(
