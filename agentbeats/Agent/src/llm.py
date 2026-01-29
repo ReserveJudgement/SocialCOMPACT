@@ -37,12 +37,6 @@ class Model:
                 host=host,
                 headers={'x-some-header': 'some-value'})
 
-        elif self.provider == "LMSTUDIO":
-            host = os.getenv("LMSTUDIO_HOST", "http://localhost:1234")
-            lms.configure_default_client(host)
-            self.llm = lms.llm(self.model, config=lms.LlmLoadModelConfigDict(contextLength=64000))
-
-
         elif self.provider == "OPENROUTER":
             self.llm = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=api_key)
 
@@ -115,9 +109,6 @@ class Model:
                         text = f"Error: {e}"
             return text
 
-        elif self.provider == "LMSTUDIO":
-            return str(self.llm.respond(str(json.dumps(prompt))))
-
         elif self.provider == "OPENROUTER":
             response = None
             for i in range(5):
@@ -153,6 +144,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
