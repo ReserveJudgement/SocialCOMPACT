@@ -12,7 +12,7 @@ from ollama import Client
 import lmstudio as lms
 
 class Model:
-    def __init__(self, provider, model, api_key=None, rpm=None, tpm=None, max_tokens=10000):
+    def __init__(self, provider, model, api_key=None, rpm=None, tpm=None, rpd=None, max_tokens=10000):
         self.provider = provider
         self.model = model
         self.rpm = rpm
@@ -34,6 +34,9 @@ class Model:
             self.llm = genai.Client(api_key=api_key)
 
         elif self.provider == "OPENAI":
+            if api_key is None:
+                print("Error: OpenAI model needs an API key")
+                exit()
             self.llm = OpenAI()
 
         elif self.provider == "OLLAMA":
@@ -43,6 +46,9 @@ class Model:
                 headers={'x-some-header': 'some-value'})
 
         elif self.provider == "OPENROUTER":
+            if api_key is None:
+                print("Error: OpenRouter model needs an API key")
+                exit()
             if self.rpm is None:
                 self.rpm = 20
             if self.rpd is None:
@@ -153,6 +159,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
