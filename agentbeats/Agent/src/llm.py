@@ -21,6 +21,7 @@ class Model:
         self.max_tokens = max_tokens
         self.num_requests = 0
         self.tokens_used = 0
+        self.last_time = time.time()
 
         if self.provider == "GOOGLE":
             if api_key is None:
@@ -160,6 +161,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
