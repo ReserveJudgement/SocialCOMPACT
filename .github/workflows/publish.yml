@@ -19,9 +19,6 @@ jobs:
           - name: social-compact-agent
             dockerfile: agentbeats/Agent/Dockerfile
             context: agentbeats/Agent
-          - name: social-compact-arena
-            dockerfile: agentbeats/Arena/Dockerfile
-            context: agentbeats/Arena
 
     # These permissions are required for the workflow to:
     # - Read repository contents (checkout code)
