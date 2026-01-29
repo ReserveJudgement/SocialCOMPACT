@@ -26,11 +26,10 @@ TERMINAL_STATES = {
 
 
 class Executor(AgentExecutor):
-    def __init__(self, platform=os.getenv("PLATFORM"), model=os.getenv("MODEL"), api_key=None):
+    def __init__(self, platform=os.getenv("PLATFORM"), model=os.getenv("MODEL")):
         self.agents: dict[str, Agent] = {} # context_id to agent instance
         self.platform = platform
         self.model = model
-        self.api_key = api_key
 
     async def execute(self, context: RequestContext, event_queue: EventQueue) -> None:
         msg = context.message
