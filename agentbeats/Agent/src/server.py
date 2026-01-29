@@ -22,7 +22,7 @@ def main():
     parser.add_argument("--card-url", type=str, help="URL to advertise in the agent card")
     parser.add_argument(
         "--platform", type=str, default=os.getenv("PLATFORM"),
-        help="LLM platform name (one of: OPENAI, GOOGLE, OPENROUTER, OLLAMA or LMSTUDIO)")
+        help="LLM platform name (one of: OPENAI, GOOGLE, OPENROUTER, OLLAMA)")
     parser.add_argument(
         "--model", type=str, default=os.getenv("MODEL"),
         help="Model identifier to use for the LLM")
