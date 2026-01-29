@@ -39,7 +39,8 @@ class Model:
 
         elif self.provider == "LMSTUDIO":
             host = os.getenv("LMSTUDIO_HOST", "http://localhost:1234")
-            self.llm = lms.llm(self.model, config=lms.LlmLoadModelConfigDict(contextLength=64000), base_url=host)
+            lms.configure_default_client(host)
+            self.llm = lms.llm(self.model, config=lms.LlmLoadModelConfigDict(contextLength=64000))
 
 
         elif self.provider == "OPENROUTER":
@@ -152,6 +153,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
