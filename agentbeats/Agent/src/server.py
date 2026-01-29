@@ -21,14 +21,11 @@ def main():
     parser.add_argument("--port", type=int, default=9018, help="Port to bind the server")
     parser.add_argument("--card-url", type=str, help="URL to advertise in the agent card")
     parser.add_argument(
-        "--platform", type=str, default=os.getenv("PLATFORM", "OLLAMA"),
+        "--platform", type=str, default=os.getenv("PLATFORM"),
         help="LLM platform name (one of: OPENAI, GOOGLE, OPENROUTER, OLLAMA or LMSTUDIO)")
     parser.add_argument(
-        "--model", type=str, default=os.getenv("MODEL", "gpt-oss:20b"),
+        "--model", type=str, default=os.getenv("MODEL"),
         help="Model identifier to use for the LLM")
-    parser.add_argument(
-        "--apikey", type=str, default="OPENAI_API_KEY",
-        help="Name of the environment variable containing API key for the LLM platform")
     args = parser.parse_args()
 
     # Fill in your agent card
@@ -70,7 +67,7 @@ def main():
     )
 
     request_handler = DefaultRequestHandler(
-        agent_executor=Executor(platform=args.platform, model=args.model, api_key=args.apikey),
+        agent_executor=Executor(platform=args.platform, model=args.model),
         task_store=InMemoryTaskStore(),
     )
     server = A2AStarletteApplication(
