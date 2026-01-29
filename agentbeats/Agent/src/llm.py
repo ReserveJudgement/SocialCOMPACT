@@ -160,9 +160,11 @@ class Model:
                     elif i == 4:
                         return err_msg
                 
-                elif isinstance(response, dict) and ("choices" in response.keys()):
+                elif isinstance(response, dict):
                     return response.choices[0].message.content
 
+                elif isinstance(response, str):
+                    return response
 
 
 
