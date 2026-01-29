@@ -32,12 +32,14 @@ class Model:
             self.llm = OpenAI()
 
         elif self.provider == "OLLAMA":
+            host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
             self.llm = Client(
-                host='http://localhost:11434',
+                host=host,
                 headers={'x-some-header': 'some-value'})
 
         elif self.provider == "LMSTUDIO":
-            self.llm = lms.llm(self.model, config=lms.LlmLoadModelConfigDict(contextLength=64000))
+            host = os.getenv("LMSTUDIO_HOST", "http://localhost:1234")
+            self.llm = lms.llm(self.model, config=lms.LlmLoadModelConfigDict(contextLength=64000), base_url=host)
 
 
         elif self.provider == "OPENROUTER":
@@ -150,6 +152,7 @@ class Model:
                         return err_msg
                 else:
                     return response.choices[0].message.content
+
 
 
 
