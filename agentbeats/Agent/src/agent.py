@@ -11,7 +11,7 @@ from messenger import Messenger
 load_dotenv()
 
 class Agent:
-    def __init__(self, platform, model, api_key):
+    def __init__(self, platform, model):
         self.messenger = Messenger()
         # Initialize other state here
         if platform is None:
@@ -19,8 +19,7 @@ class Agent:
         if model is None:
             model = os.getenv("MODEL")
         print("initialized ", platform, model)
-        if api_key is None:
-            api_key = os.getenv(f"{platform}_API_KEY")
+        api_key = os.getenv(f"{platform}_API_KEY")
         self.model = Model(platform, model, api_key)
         self.name = ""
         self.background = ""
