@@ -11,13 +11,11 @@ from messenger import Messenger
 load_dotenv()
 
 class Agent:
-    def __init__(self, platform, model):
+    def __init__(self):
         self.messenger = Messenger()
         # Initialize other state here
-        if platform is None:
-            platform = os.getenv("PLATFORM")
-        if model is None:
-            model = os.getenv("MODEL")
+        platform = os.getenv("PLATFORM")
+        model = os.getenv("MODEL")
         print("initialized ", platform, model)
         api_key = os.getenv(f"{platform}_API_KEY")
         self.model = Model(platform, model, api_key)
