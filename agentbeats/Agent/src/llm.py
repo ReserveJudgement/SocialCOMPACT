@@ -39,7 +39,7 @@ class Model:
             if api_key is None:
                 print("Error: OpenAI model needs an API key")
                 exit()
-            self.llm = OpenAI()
+            self.llm = OpenAI(api_key=api_key)
 
         elif self.provider == "OLLAMA":
             host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
@@ -167,6 +167,7 @@ class Model:
                     return response.choices[0].message.content
 
                 
+
 
 
 
