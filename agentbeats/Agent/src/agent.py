@@ -17,7 +17,7 @@ class Agent:
         platform = os.getenv("PLATFORM")
         model = os.getenv("MODEL")
         print("initialized ", platform, model)
-        api_key = os.getenv(f"{platform}_API_KEY")
+        api_key = os.getenv("API_KEY")
         self.model = Model(platform, model, api_key)
         self.name = ""
         self.background = ""
