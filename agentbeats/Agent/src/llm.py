@@ -159,12 +159,14 @@ class Model:
                         time.sleep(5)
                     elif i == 4:
                         return err_msg
-                
-                elif isinstance(response, dict):
-                    return response.choices[0].message.content
 
                 elif isinstance(response, str):
                     return response
+                
+                elif response is not None:
+                    return response.choices[0].message.content
+
+                
 
 
 
