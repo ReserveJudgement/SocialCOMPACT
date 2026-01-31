@@ -387,7 +387,7 @@ class Agent:
                 if self.task["Game"] == "Survivor":
                     predictions = [p["Target"] for p in pred if p["Shots"] > 0]
                     actions = [a["Target"] for a in action if a["Shots"] > 0]
-                    numplayers = list(set(predictions + actions))
+                    numplayers = len(list(set(predictions + actions)))
                     misses1 = sum([1 if x not in actions else 0 for x in predictions])
                     misses2 = sum([1 if x not in predictions else 0 for x in actions])
                     misses = misses1 + misses2
