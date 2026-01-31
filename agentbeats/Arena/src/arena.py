@@ -111,9 +111,10 @@ class Agent:
             required = None
         game_list = list(game_registry.keys()) # list of available games
         compositions = []
-        # all combinations of players until max size, default to max of 4
-        max_size = request.config.get("max_size", 4)
-        for i in range(2, min(num_agents + 1, max_size + 1)):
+        # all combinations of players until max size, default to max of 5
+        max_size = request.config.get("max_size", 5)
+        min_size = request.config.get("min_size", 2)
+        for i in range(min_size, min(num_agents + 1, max_size + 1)):
             if required is not None:
                 compositions += [x for x in combinations(list(request.participants.items()), i) if all([p in list(x) for p in required])]
             else:
@@ -384,13 +385,16 @@ class Agent:
                     self.predictions[player][other]["accuracy"] = "invalid"
                     continue
                 if self.task["Game"] == "Survivor":
-                    predictions = [p["Target"] for p in pred if p["Shots"] != 0]
-                    actions = [a["Target"] for a in action if a["Shots"] != 0]
-                    numplayers = len(self.env.players) - len(self.env.eliminated)
+                    predictions = [p["Target"] for p in pred if p["Shots"] > 0]
+                    actions = [a["Target"] for a in action if a["Shots"] > 0]
+                    numplayers = list(set(predictions + actions))
                     misses1 = sum([1 if x not in actions else 0 for x in predictions])
                     misses2 = sum([1 if x not in predictions else 0 for x in actions])
                     misses = misses1 + misses2
-                    acc = (numplayers - misses - 1) / (numplayers - 1)
+                    if numplayers > 0:
+                        acc = (numplayers - misses) / (numplayers)
+                    else:
+                        acc = 1
                     self.predictions[player][other]["accuracy"] = acc
                 elif self.task["Game"] == "Scheduler":
                     acc = 1 if list(pred[0].values())[0] == list(action[0].values())[0] else 0
